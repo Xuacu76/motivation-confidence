@@ -739,6 +739,18 @@
                         <label for="diary-day-${dayIndex}-different" class="block text-lg font-semibold text-gray-700">What will I do differently the next time I train this performance objective? (Future Action)</label>
                         <textarea id="diary-day-${dayIndex}-different" rows="2" placeholder="Ex: Next time, I will include 10 more minutes of dynamic stretching to prevent swing stiffness." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                     </div>
+                    
+                    <!-- NEW FIELD: Positive Thoughts -->
+                    <div class="space-y-3">
+                        <label for="diary-day-${dayIndex}-positive" class="block text-lg font-semibold text-gray-700">Positive Thoughts (Reinforcement)</label>
+                        <textarea id="diary-day-${dayIndex}-positive" rows="2" placeholder="Ex: My effort today was 100%. I am getting closer to my goal." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-green-50"></textarea>
+                    </div>
+
+                    <!-- NEW FIELD: Negative Thoughts -->
+                    <div class="space-y-3">
+                        <label for="diary-day-${dayIndex}-negative" class="block text-lg font-semibold text-gray-700">Negative Thoughts (Identify & Address)</label>
+                        <textarea id="diary-day-${dayIndex}-negative" rows="2" placeholder="Ex: I felt frustrated and thought, 'I'm not good enough.' (Write down the thought, not the feeling.)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-red-50"></textarea>
+                    </div>
                 `;
                 diaryContainer.appendChild(dayDiv);
             });
@@ -790,13 +802,17 @@
                 const control = document.getElementById(`diary-day-${dayIndex}-control`).value.trim();
                 const learned = document.getElementById(`diary-day-${dayIndex}-learned`).value.trim();
                 const different = document.getElementById(`diary-day-${dayIndex}-different`).value.trim();
+                const positive = document.getElementById(`diary-day-${dayIndex}-positive`).value.trim(); // NEW
+                const negative = document.getElementById(`diary-day-${dayIndex}-negative`).value.trim(); // NEW
 
-                if (control || learned || different) {
+                if (control || learned || different || positive || negative) {
                     data.confidenceDiary.push({
                         day: day,
                         control: control,
                         learned: learned,
-                        different: different
+                        different: different,
+                        positive: positive, // NEW
+                        negative: negative // NEW
                     });
                 }
             });
@@ -896,16 +912,21 @@
                 data.confidenceDiary.forEach(d => {
                     html += `<div class="ml-2 mt-3 p-4 bg-indigo-50 rounded-lg border border-indigo-200">`;
                     html += `<strong class="text-indigo-900">${d.day}:</strong>`;
-                    // Labels are now hardcoded in JS for the summary
+                    // Existing labels
                     html += `<p class="text-sm mt-1 ml-2"><strong>What did I control well?:</strong> ${d.control || 'N/A'}</p>`;
                     html += `<p class="text-sm ml-2"><strong>What did I learn?:</strong> ${d.learned || 'N/A'}</p>`;
                     html += `<p class="text-sm ml-2"><strong>What will I do differently?:</strong> ${d.different || 'N/A'}</p>`;
+                    // NEW labels
+                    html += `<p class="text-sm ml-2 font-bold text-green-700">Positive Thoughts:</p><p class="text-sm ml-4">${d.positive || 'N/A'}</p>`;
+                    html += `<p class="text-sm ml-2 font-bold text-red-700">Negative Thoughts:</p><p class="text-sm ml-4">${d.negative || 'N/A'}</p>`;
                     html += `</div>`;
                     
                     textReport += `\n--- ${d.day} ---\n`;
                     textReport += `What did I control well?: ${d.control || 'N/A'}\n`;
                     textReport += `What did I learn?: ${d.learned || 'N/A'}\n`;
                     textReport += `What will I do differently?: ${d.different || 'N/A'}\n`;
+                    textReport += `Positive Thoughts: ${d.positive || 'N/A'}\n`; // NEW
+                    textReport += `Negative Thoughts: ${d.negative || 'N/A'}\n`; // NEW
                 });
             } else {
                  html += '<p class="text-red-600 font-semibold mb-4">Confidence Diary (Page 6) has not been completed.</p>';
